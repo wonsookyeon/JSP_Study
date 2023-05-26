@@ -1,11 +1,14 @@
-서블릿: 자바코드 안에 html 문서가 들어가있는것, 복잡
+서블릿: 자바코드 안에 html 문서가 들어가있는것, 복잡 
+
 JSP: html코드 안에 자바코드가 들어가있는것, 복잡, 한계가 있음, 보안에 취약
 
 MVC(모델-뷰-컨트롤러): 자바코드와 html 문서를 따로 분리,
 			사용자 인터페이스, 데이터 및 논리 제어를 구현하는데
 			널리 사용되는 소프트웨어 디자인 패턴
-뷰 : html문서만
-모델, 컨드롤러: 자바코드
+-뷰 : html문서만
+-모델, 컨트롤러: 자바코드(sevlet)
+
+javascript : 유효성체크
 
 JSP 내장객체 : out, response, application
 
@@ -28,5 +31,48 @@ http://localhost:8081/web-study-01/Add?num1=101&num2=202
 response.setContentType("text/html; charset=utf-8");
 - charset=utf-8 쓰면 한글이 나옴
 
-get방식 - 조회, 검색 할때
-post방식 - 변경 할때
+init, destory - 처음 시작할때 한번만
+doGet - 요청이 올때마다
+
+-----에러발생
+
+< STS 런 돌렸는데 빨간 오류창 뜰 때 >
+
+1. Window Preferences > server > Runtime 들어가서 Tomcat 삭제하고 다시 추가해보기
+
+2. 패키지 익스플로러 우클릭 > Properies > Project Facet > Axis2 Web Services > Runtimes 안의 Tomcat 체크
+
+3. Properies > Java Build Path > Libraries > Server Runtime[Apache Tomcat v9.0] 삭제
+   > Class path에서 Add Library해서 Server Runtime[Apache Tomcat v9.0] 다시 추가
+
+
+----------------------------------------------------------------
+get방식 - 조회, 검색 할때 (기본,
+post방식 - 데이터가 변동있을 때, (로그인,
+
+포워딩방식 (dispatcher)
+- A에게 요청 후, A가 B에게 답을 받아서 답을 줌
+
+리다이렉트방식 (
+- A에게 요청 후 다시 B에게 요청해서 B가 답을 줌
+
+
+------------전단계로(다시) 버튼생성
+out.println("<br><a href = 'javascript:history.go(-1)'>다시</a>");
+
+javascript 파일 생성 -> 입력: VSC에서 하면 더 편함 , 드래그해서 입력하고 저장하면 입력됨.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

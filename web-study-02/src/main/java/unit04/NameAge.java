@@ -1,4 +1,4 @@
-package unit03;
+package unit04;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,26 +9,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/MethodServlet")
-public class Method extends HttpServlet {
+@WebServlet("/name2")
+public class NameAge extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=utf-8");
 		
-		PrintWriter out = response.getWriter();
-		out.print("<h1>get방식으로 응답</h1>");
-		out.close();
+		String name = request.getParameter("name");
+		int age = Integer.parseInt(request.getParameter("age"));
 		
-	}
+		PrintWriter out = response.getWriter();
+		
+		out.print("이름:" + name +"<br>");
+		out.print("나이:" + age + "<br>");
+		
 
+	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=utf-8");
-		
-		PrintWriter out = response.getWriter();
-		out.print("<h1>post방식으로 응답</h1>");
-		out.close();
-		
+	
+		doGet(request, response);
 	}
 
 }
