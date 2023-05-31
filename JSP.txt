@@ -53,7 +53,7 @@ post방식 - 데이터가 변동있을 때, (로그인,
 포워딩방식 (dispatcher)
 - A에게 요청 후, A가 B에게 답을 받아서 답을 줌
 
-리다이렉트방식 (
+리다이렉트방식 (sendRedirect)
 - A에게 요청 후 다시 B에게 요청해서 B가 답을 줌
 
 
@@ -61,6 +61,13 @@ post방식 - 데이터가 변동있을 때, (로그인,
 out.println("<br><a href = 'javascript:history.go(-1)'>다시</a>");
 
 javascript 파일 생성 -> 입력: VSC에서 하면 더 편함 , 드래그해서 입력하고 저장하면 입력됨.
+
+
+session의 장점
+- 보안유지에 강력함
+- 저장할 수 있는 데이터에 한계가 없음
+
+session.invalidate(); 해당세션 제거, 세션에 속해있는 값 제거(로그아웃)
 
 
 
