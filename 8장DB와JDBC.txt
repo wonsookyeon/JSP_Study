@@ -1,0 +1,33 @@
+8장
+
+<%@ page import="java.sql.*"%> //이거 하나만 써도 됨
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.Statement" %>
+
+*preparedStatement 생성
+connection 인터페이스의 preparedStatement()메소드 호출
+ex) preparedStatement pstmt= con.preparedStatement(sql)
+
+
+Connection 데이터베이스와 연결
+Statement 질의, 갱신 실행
+RresultSet 결과물을 가져옴
+
+
+<Resource name="jdbc/myoracle" auth="Container"
+type="javax.sql.DataSource"
+driverClassName="oracle.jdbc.OracleDriver"
+url="jdbc:oracle:thin:@127.0.0.1:1521:xe"
+username="scott" password="tiger" maxTotal="20" maxIdle="10"
+maxWaitMillis="-1" />
+-----------------------------------------------------------------------------
+<%@ page import="java.sql.*"%>
+<%@ page import="javax.naming.*"%>
+<%@ page import="javax.sql.*"%>
+
+Context initContext = new InitialContext();
+	 Context envContext  = (Context)initContext.lookup("java:/comp/env");
+	 DataSource ds = (DataSource)envContext.lookup("jdbc/myoracle");
+	 Connection conn = ds.getConnection();
