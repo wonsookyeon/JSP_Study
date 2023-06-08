@@ -27,7 +27,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2"> ${massage} </td>
+				<td colspan="2"> ${message} </td>
 			</tr>
 	
 		</table>
