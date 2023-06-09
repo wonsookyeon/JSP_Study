@@ -1,3 +1,4 @@
+// 회원 가입하는 로직
 package com.saeyan.controller;
 
 import java.io.IOException;

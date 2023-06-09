@@ -1,3 +1,4 @@
+<%--로그인 했을때 나오는 창 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>

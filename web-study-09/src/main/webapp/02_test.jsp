@@ -1,3 +1,4 @@
+<%-- MemberDAO 커넥션 객체를 얻어내는지 확인하기 위한 test --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import = "com.saeyan.dao.MemberDAO" %>

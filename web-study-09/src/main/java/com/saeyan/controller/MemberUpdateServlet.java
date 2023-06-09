@@ -1,4 +1,5 @@
-//회원정보변경 버튼 누르면 연결되는 서블릿
+// 회원정보 업데이트 로직
+// 회원정보변경 버튼 누르면 연결되는 서블릿
 package com.saeyan.controller;
 
 import java.io.IOException;

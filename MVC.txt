@@ -1,0 +1,43 @@
+MVC(모델-뷰-컨트롤러): 자바코드와 html 문서를 따로 분리,
+			사용자 인터페이스, 데이터 및 논리 제어를 구현하는데
+			널리 사용되는 소프트웨어 디자인 패턴
+-뷰 : html문서만
+-모델, 컨트롤러: 자바코드(sevlet)
+
+Model : 데이터베이스나 파일과 같은 데이터 소스를 제어한 후 결과를 리턴 /데이터를 처리해서 보내는 곳
+ - DAO (Data Access Object) : 자바빈, 데이터 접근이 목적인 객체 / 회원 정보 수정, 추가, 삭제
+ - VO (Value Object) : 데이터 교환이 이루어 질 수 있도록 하는 객체 / DB의 값을 VO 얻어오거나 VO 저장된 값을 DB에 추가
+
+View : 데이터가 반영되어 클라이언트 측(사용자)에게 보여주는 역할, 클라이언트 측 기술(HTML/CSS/Javascipt)들을 모아둔 컨테이너
+
+Controller :  클라이언트 측 요청을 받아 파악한 후 그 요청에 맞는 데이터를 Model 에 의뢰하는 역할
+                 Spring Framework에서는 "DispatcherServlet"이 되고
+                프레임워크를 사용하지 않는 일반 JSP Dynamic Web Project에서는 web.xml에서 정의한 Servlet이다.
+
+MVC에서 자주 쓰이는 용어
+- DAO (Data Access Object) : 실질적으로 DB에 접근하는 객체
+- DTO (Data Transfer Object) : 컨트롤러, 뷰, 비즈니스, 퍼시스턴스 계층간 데이터 교환을 위한 객체
+                                    속성과 그 속성을 접근하기 위한 getter,setter 메소드만 가진 클래스
+- VO (Value Object) : DTO 와 비슷한 개념, Read Only 속성을 가짐
+- MO (Model) : 비즈니스 영역의 로직을 처리
+
+MVC 2 패턴은 Model과 Controller는 자바 프로그램으로 구성되고, 뷰는 JSP 파일로 구성
+
+컨트롤러(Controller) = 서블릿 = control 패키지
+모델(Model) = 로직 처리 클래스, 자바빈 = dao, service 패키지
+뷰(View) = JSP = WebContent/*.jsp
+사용자(User) = 웹 브라우저 내지 휴대폰과 같은 기기
+
+파일 요청방식 get / post
+- get 방식 : 데이터 가져오기/ 링크에 의한 요청, 회원가입이나 게시글 작성등의 작업에서 입력폼을 출력
+    ex) 회원가입 버튼을 클릭하면 입력폼을 띄우기 위해 get방식으로 join.do 요청
+      <input type="button" value="회원가입" onclick="location.href='join.do'">
+
+- post 방식 : 데이터 CRUD 수정, 삭제 등/ 정보를 모두 입력하고 DB에 정보를 저장하기 위한 작업
+    ex) 로그인페이지에서 아이디와 암호를 입력한 후 로그인 버튼을 클릭하면 post 방식으로 login.do 요청
+       <form action="join.do" method="post" name="frm"> </form>
+
+
+
+
+

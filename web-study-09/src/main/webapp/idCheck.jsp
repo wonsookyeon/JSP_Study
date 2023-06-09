@@ -1,8 +1,8 @@
+<%-- 회원가입폼에서 아이디 중복확인을 눌렀을때 나오는 중복체크 하는 폼 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- 회원가입폼에서 아이디 중복확인을 눌렀을때 --%>
 <!DOCTYPE html>
 <html>
 <head>

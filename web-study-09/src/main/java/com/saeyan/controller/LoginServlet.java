@@ -1,9 +1,9 @@
+// 로그인 하는 로직
 //login 에서 넘어온 아이디, 비밀번호가 DB와 일치하는지
 package com.saeyan.controller;
 
 import java.io.IOException;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

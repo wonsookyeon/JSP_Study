@@ -1,3 +1,4 @@
+// 회원가입에서 아이디 체크하는 로직
 package com.saeyan.controller;
 
 import java.io.IOException;
