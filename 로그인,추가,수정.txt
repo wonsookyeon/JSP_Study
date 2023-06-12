@@ -1,0 +1,691 @@
+★01_dbcp.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%@ page import="java.sql.*"%>
+<%@ page import="javax.naming.*"%>
+<%@ page import="javax.sql.*"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DB 연동</title>
+</head>
+<body>
+
+ <h4>DB 연동</h4>
+	 <%
+		 Context initContext = new InitialContext();
+		 Context envContext  = (Context)initContext.lookup("java:/comp/env");
+		 DataSource ds = (DataSource)envContext.lookup("jdbc/myoracle");
+		 Connection conn = ds.getConnection();
+		 out.println("DBCP 연동 성공");
+	 %>
+</body>
+</html>
+-----------------------------------------------------------------------------------------------
+★02_test.jsp
+
+<%-- EmployeesDAO 커넥션 객체를 얻어내는지 확인하기 위한 test --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<%@ page import = "com.magic.dao.EmployeesDAO" %>
+<%@page import="java.sql.*"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<%
+	EmployeesDAO emDao = EmployeesDAO.getInstance();
+		//EmployeesrDAO memDao = new EmployeesDAO(); 는 불가 : private 로 묶여있기 때문에 import해서 연결해주고 가져와야 한다.
+		Connection conn= emDao.getConnection();
+		out.println("DBCP 연결 성공!!");
+	%>
+
+</body>
+</html>
+---------------------------------------------------------------------------------------------
+★EmployeesVO.java
+
+package com.magic.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+public class EmployeesVO {
+	
+	private String id;
+	private String pass;
+	private String name;
+	private String lev;
+	private String enter;
+	private String gender;
+	private String phone;
+	
+}
+---------------------------------------------------------------------------------------------
+★EmployeesDAO.java
+
+package com.magic.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import com.magic.dao.EmployeesDAO;
+import com.magic.dto.EmployeesVO;
+
+public class EmployeesDAO {
+
+	private static EmployeesDAO instance = new EmployeesDAO();
+
+	private EmployeesDAO() {
+	}
+
+	public static EmployeesDAO getInstance() { // 값을 read only property 로 만들기 위해서 setter X, getter만 만듬
+		return instance;
+
+	}
+
+	// 커넥션 풀
+	private Connection getConnection() throws Exception {
+		Context initContext = new InitialContext();
+		Context envContext = (Context) initContext.lookup("java:/comp/env");
+		DataSource ds = (DataSource) envContext.lookup("jdbc/myoracle");
+		Connection conn = ds.getConnection();
+
+		return conn;
+	}
+
+	// 입력한 정보가 DB에 존재하는지 여부 체크
+	public int userCheck(String id, String pwd, String lev) {
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select * from employees where id = ?";
+		int result = -1;
+
+		try {
+			// DB연결
+			conn = getConnection();
+			// DB 선행으로 문장실행
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+
+				if (pwd.equals(rs.getString("pass"))) {
+					if (lev.equals(rs.getString("lev"))) {
+
+						result = 3; // 일반회원
+
+						if (lev.equals("A"))
+							result = 2; // 관리자
+
+					} else {
+						result = 1; // 아이디 일치, 비번 일치, lev 불일치
+					}
+
+				} else {
+					result = 0; // 아이디 일치, 비번 불일치
+				}
+			} else {
+				result = -1; // 아이디 불일치
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	public EmployeesVO getMember(String id) {
+		EmployeesVO vo = new EmployeesVO();
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select * from employees where id = ?";
+		int result = -1;
+
+		try {
+			// DB연결
+			conn = getConnection();
+			// DB 선행으로 문장실행
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				vo.setId(rs.getString("id"));
+				vo.setPass(rs.getString("pass"));
+				vo.setName(rs.getString("name"));
+				vo.setLev(rs.getString("lev"));
+				vo.setEnter(rs.getString("enter"));
+				vo.setGender(rs.getString("gender"));
+				vo.setPhone(rs.getString("phone"));
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return vo;
+	}
+
+	public int updateMember(EmployeesVO vo) {
+		int result = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "update employees set pass=?, name=?, lev=?, gender=?, phone=? where id = ?";
+
+		try {
+			// DB연결
+			conn = getConnection();
+			// DB 선행으로 문장실행
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getPass());
+			pstmt.setString(2, vo.getName());
+			pstmt.setString(3, vo.getLev());
+			pstmt.setString(4, vo.getGender());
+			pstmt.setString(5, vo.getPhone());
+			pstmt.setString(6, vo.getId());
+			
+			result = pstmt.executeUpdate();
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;	
+	}
+}
+---------------------------------------------------------------------------------------------
+★index.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<%
+		response.sendRedirect("login.do");
+	%>
+
+</body>
+</html>
+---------------------------------------------------------------------------------------------
+★LoginServlet.java
+
+package com.magic.controller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/login.do")
+public class LoginServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher dis = request.getRequestDispatcher("login.jsp");
+		dis.forward(request, response);
+		
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		
+		String id = request.getParameter("id");
+		String pwd = request.getParameter("pwd");
+		String lev = request.getParameter("lev");
+		String url = null;
+		
+		//생성된 객체를 참조
+		EmployeesDAO empDAO = EmployeesDAO.getInstance();
+		int result = empDAO.userCheck(id, pwd, lev);
+//		System.out.println("result : " + result);
+		
+		if(result == 2 || result ==3) {
+			EmployeesVO mVo = new EmployeesVO();
+			mVo = empDAO.getMember(id);
+			
+			HttpSession session = request.getSession();
+			session.setAttribute("loginUser", mVo);
+			session.setAttribute("result", result);
+			url ="main.jsp";
+			
+		}else {
+			url ="login.jsp";
+			if(result == 1){
+				request.setAttribute("message", "레벨이 틀립니다.");
+			}else if(result == 0){
+				request.setAttribute("message", "비밀번호가 틀립니다.");
+			}else {
+				request.setAttribute("message", "ID가 틀립니다.");
+			}
+		}
+		RequestDispatcher dis = request.getRequestDispatcher(url);
+		dis.forward(request, response);	
+	}
+}
+---------------------------------------------------------------------------------------------
+★login.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="header.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form method="post" action="login.do"> <%-- action 은 없어도 원래로 돌아감 --%>
+		<table align="center">
+			<tr>
+				<td colspan="2" align="center">로그인</td>
+			</tr>
+			<tr>
+				<td align="center">아이디</td>
+				<td><input type="text" name="id"></td>
+			</tr>
+			<tr>
+				<td align="center">비밀번호</td>
+				<td><input type="password" name="pwd"></td>
+			</tr>
+			<tr>
+				<td align="center">레벨</td>
+				<td><select name="lev">
+						<option value="A">운영자</option>
+						<option value="B">일반회원</option>
+					</select></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<input type="submit" value=로그인>&nbsp;&nbsp;
+					<input type="reset" value=취소>
+				</td>
+			</tr>
+		</table>
+		<div style="color: red; text-align: center;">${message}</div>
+	</form>
+
+</body>
+</html>
+---------------------------------------------------------------------------------------------
+★header.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	td{
+		border : 1px solid black;
+		width : 250px;
+		text-align: center;
+	}
+</style>
+</head>
+<body>
+
+	<table class="mainmenu" align="center">
+		<c:if test="${empty loginUser}">
+			<tr>
+				<td></td><td></td>
+				<td class="login"><a name="login" href="login.do" style="text-decoration:none;">로그인</a></td>
+				<td>사원등록<br>
+					<span style="color: red">(관리자로 로그인 후 사용가능)</span>
+				</td>
+				<td>마이페이지<br>
+					<span style="color: red">(로그인 후 사용가능)</span>
+				</td>
+			</tr>
+		</c:if>
+		<c:if test="${!empty loginUser}">
+			<tr>
+				<td>${loginUser.name}님 반갑습니다.</td>
+				<td>레벨 : ${loginUser.lev}</td>
+				<td class="login"><a href="logout.do" style="text-decoration:none;">로그아웃</a></td>
+				
+				<c:choose>
+					<c:when test="${result==2}">
+						<td><a href="custom.do" style="text-decoration:none;">사원등록</a>
+						</td>
+					</c:when>
+					
+					<c:when test="${result==3}">
+						<td>사원등록<br>
+							<span style="color: red">(관리자로 로그인 후 사용가능)</span>
+							</td>
+					</c:when>
+				</c:choose>
+				
+				<td>
+					<a href="mypage.do" style="text-decoration:none;">마이페이지</a>
+				</td>
+			</tr>
+		</c:if>
+		
+	</table>
+</body>
+</html>
+---------------------------------------------------------------------------------------------
+★main.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="header.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body align="center">
+
+	<h2>회원 전용 페이지</h2>
+	<img src="images/dog1.jpg" width="30%" height="30%">
+
+</body>
+</html>
+---------------------------------------------------------------------------------------------
+★MypageSevlet.java
+
+package com.magic.controller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.magic.dao.EmployeesDAO;
+import com.magic.dto.EmployeesVO;
+
+
+@WebServlet("/mypage.do")
+public class MypageSevlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+	// mypage 눌렀을때 get 방식이 받아줌
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		HttpSession session = request.getSession();
+		String url = "login.do";
+		
+		if(session != null) {
+			url= "mypage.jsp";
+			RequestDispatcher dis = request.getRequestDispatcher(url);
+			dis.forward(request, response);
+		}else {
+			response.sendRedirect(url);
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("utf-8");
+		
+		EmployeesVO vo = new EmployeesVO();
+		HttpSession session = request.getSession();
+		
+		vo.setId(request.getParameter("id"));
+		vo.setPass(request.getParameter("pwd"));
+		vo.setName(request.getParameter("name"));
+		vo.setLev(request.getParameter("lev"));
+		vo.setGender(request.getParameter("gender"));
+		vo.setPhone(request.getParameter("phone"));
+		
+		EmployeesDAO empDAO = EmployeesDAO.getInstance();
+		empDAO.updateMember(vo);
+		
+		empDAO.getMember(vo.getId());
+		request.setAttribute("member", vo);
+		request.setAttribute("message", "회원정보가 수정되었습니다.");
+		session.setAttribute("loginUser", vo);
+		
+		String url = "joinSuccess.jsp";
+		RequestDispatcher dis = request.getRequestDispatcher(url);
+		dis.forward(request, response);
+	}
+}
+---------------------------------------------------------------------------------------------
+★mypage.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="header.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<form method="post" name="frm" action="mypage.do"> <%-- action 이 없어도 mypage.do로 감 --%>
+	<br><br>
+		<table align="center" width="550">
+		
+			<tr>
+				<td colspan="2">마이페이지</td>
+			</tr>
+			
+			<tr>
+				<td>아이디</td>
+				<td><input type="text" name="id" value="${loginUser.id}" readonly="readonly"></td>
+			</tr>
+			
+			<tr>
+				<td>비밀번호</td>
+				<td><input type="password" name="pwd" value="${loginUser.pass}"></td>
+			</tr>
+			
+			<tr>
+				<td>이름</td>
+				<td><input type="text" name="name" value="${loginUser.name}"></td>
+			</tr>
+			
+			<tr>
+				<td>권한</td>
+				<td>
+				<select name="lev">
+					<c:choose>
+						<c:when test="${result==2}">
+							<option value="A" selected="selected">운영자</option>
+							<option value="B">일반회원</option>
+						</c:when>
+						<c:when test="${result==3}">
+							<option value="A">운영자</option>
+							<option value="B" selected="selected">일반회원</option>
+						</c:when>
+					</c:choose>
+				</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>성별</td>
+				<td>
+				<select name="gender">
+					<c:choose>
+						<c:when test="${loginUser.gender==1}">
+							<option value="1" selected="selected">남자</option>
+							<option value="2">여자</option>
+						</c:when>
+						<c:when test="${loginUser.gender==2}">
+							<option value="1">남자</option>
+							<option value="2" selected="selected">여자</option>
+						</c:when>
+					</c:choose>
+				</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>전화번호</td>
+				<td><input type="text" name="phone" value="${loginUser.phone}"></td>
+			</tr>
+			
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="수정"> &nbsp;&nbsp;
+					<input type="reset" value="취소">
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</body>
+</html>
+---------------------------------------------------------------------------------------------
+★joinSuccess.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="header.jsp" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<table align="center" width="550">
+		
+			<tr>
+				<td colspan="2">
+					<h3>사원 정보</h3>
+					<div style="color: red">${message}</div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>아이디</td>
+				<td>${loginUser.id}</td>
+			</tr>
+			
+			<tr>
+				<td>비밀번호</td>
+				<td>${loginUser.pass}</td>
+			</tr>
+			
+			<tr>
+				<td>이름</td>
+				<td>${member.name}</td>
+			</tr>
+ 			
+			<tr>
+				<td>권한</td>
+				<td>
+					<c:choose>
+						<c:when test='${member.lev=="A"}'>운영자</c:when>
+						<c:otherwise>일반회원</c:otherwise>
+					</c:choose>
+				</td>
+			</tr>			
+			
+			<tr>
+				<td>성별</td>
+				<td>
+					<c:choose>
+						<c:when test='${member.gender=="1"}'>남자</c:when>
+						<c:otherwise>여자</c:otherwise>
+					</c:choose>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>전화번호</td>
+				<td>${member.phone}</td>
+			</tr>
+			
+			<tr>
+				<td colspan="2">
+					<input type="button" value="메인 페이지로 이동" onclick="location.href='main.jsp'">
+				</td>
+			</tr>
+
+		</table>
+
+</body>
+</html>
+---------------------------------------------------------------------------------------------
+★
+---------------------------------------------------------------------------------------------
+★
+---------------------------------------------------------------------------------------------
+★
