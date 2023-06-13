@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="header.jsp" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,62 +9,63 @@
 </head>
 <body>
 
-	<table align="center" width="550">
+	<form method="post"> <%--  action="custom.do" 이 없어도 custom.do로 감 --%>
+	<br><br>
+		<table align="center" width="550">
 		
 			<tr>
-				<td colspan="2">
-					<h3>사원 정보</h3>
-					<div style="color: red">${message}</div>
-				</td>
+				<td colspan="2">사원등록</td>
 			</tr>
 			
 			<tr>
 				<td>아이디</td>
-				<td>${member.id}</td>
+				<td><input type="text" name="id"></td>
 			</tr>
 			
 			<tr>
 				<td>비밀번호</td>
-				<td>${member.pass}</td>
+				<td><input type="password" name="pwd"></td>
 			</tr>
 			
 			<tr>
 				<td>이름</td>
-				<td>${member.name}</td>
+				<td><input type="text" name="name"></td>
 			</tr>
- 			
+			
 			<tr>
 				<td>권한</td>
 				<td>
-					<c:choose>
-						<c:when test='${member.lev=="A"}'>운영자</c:when>
-						<c:otherwise>일반회원</c:otherwise>
-					</c:choose>
+				<select name="lev">
+					<option value="A">운영자</option>
+					<option value="B">일반회원</option>
+				</select>
 				</td>
-			</tr>			
+			</tr>
 			
 			<tr>
 				<td>성별</td>
 				<td>
-					<c:choose>
-						<c:when test='${member.gender=="1"}'>남자</c:when>
-						<c:otherwise>여자</c:otherwise>
-					</c:choose>
+				<select name="gender">
+					<option value="1">남자</option>
+					<option value="2">여자</option>
+				</select>
 				</td>
 			</tr>
 			
 			<tr>
 				<td>전화번호</td>
-				<td>${member.phone}</td>
+				<td><input type="text" name="phone"></td>
 			</tr>
 			
 			<tr>
 				<td colspan="2">
+					<input type="submit" value="등록"> &nbsp;
+					<input type="reset" value="취소"> &nbsp;
 					<input type="button" value="메인 페이지로 이동" onclick="location.href='main.jsp'">
 				</td>
 			</tr>
-
 		</table>
+	</form>
 
 </body>
 </html>

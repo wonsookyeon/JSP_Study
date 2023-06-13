@@ -24,7 +24,7 @@ public class EmployeesDAO {
 	}
 
 	// 커넥션 풀
-	private Connection getConnection() throws Exception {
+	public Connection getConnection() throws Exception {
 		Context initContext = new InitialContext();
 		Context envContext = (Context) initContext.lookup("java:/comp/env");
 		DataSource ds = (DataSource) envContext.lookup("jdbc/myoracle");
@@ -153,6 +153,48 @@ public class EmployeesDAO {
 			pstmt.setString(4, vo.getGender());
 			pstmt.setString(5, vo.getPhone());
 			pstmt.setString(6, vo.getId());
+			
+			result = pstmt.executeUpdate();
+				
+		
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+		
+	}
+
+	public int insertMember(EmployeesVO vo) {
+		
+		int result = -1;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "insert into employees values (?, ?, ?, ?, sysdate, ?, ?)";
+
+		try {
+			// DB연결
+			conn = getConnection();
+			// DB 선행으로 문장실행
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, vo.getId());
+			pstmt.setString(2, vo.getPass());
+			pstmt.setString(3, vo.getName());
+			pstmt.setString(4, vo.getLev());
+			pstmt.setString(5, vo.getGender());
+			pstmt.setString(6, vo.getPhone());
 			
 			result = pstmt.executeUpdate();
 				
