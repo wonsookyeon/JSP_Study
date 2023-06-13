@@ -233,7 +233,9 @@ public class EmployeesDAO {
 			pstmt.setString(6, vo.getId());
 			
 			result = pstmt.executeUpdate();
+				
 		
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -247,9 +249,53 @@ public class EmployeesDAO {
 				e.printStackTrace();
 			}
 		}
-		return result;	
+		
+		return result;
+		
+	}
+
+	public int insertMember(EmployeesVO vo) {
+		
+		int result = -1;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "insert into employees values (?, ?, ?, ?, sysdate, ?, ?)";
+
+		try {
+			// DB연결
+			conn = getConnection();
+			// DB 선행으로 문장실행
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, vo.getId());
+			pstmt.setString(2, vo.getPass());
+			pstmt.setString(3, vo.getName());
+			pstmt.setString(4, vo.getLev());
+			pstmt.setString(5, vo.getGender());
+			pstmt.setString(6, vo.getPhone());
+			
+			result = pstmt.executeUpdate();
+				
+		
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 }
+
 ---------------------------------------------------------------------------------------------
 ★index.jsp
 
@@ -374,6 +420,37 @@ public class LoginServlet extends HttpServlet {
 
 </body>
 </html>
+---------------------------------------------------------------------------------------------
+★logoutServlet.java
+
+package com.magic.controller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet("/logout.do")
+public class logoutServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		session.invalidate();
+		RequestDispatcher dis = request.getRequestDispatcher("login.do");
+		dis.forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}
 ---------------------------------------------------------------------------------------------
 ★header.jsp
 
@@ -635,12 +712,12 @@ public class MypageSevlet extends HttpServlet {
 			
 			<tr>
 				<td>아이디</td>
-				<td>${loginUser.id}</td>
+				<td>${member.id}</td>
 			</tr>
 			
 			<tr>
 				<td>비밀번호</td>
-				<td>${loginUser.pass}</td>
+				<td>${member.pass}</td>
 			</tr>
 			
 			<tr>
@@ -684,8 +761,131 @@ public class MypageSevlet extends HttpServlet {
 </body>
 </html>
 ---------------------------------------------------------------------------------------------
-★
+★CustomServlet.java
+
+package com.magic.controller;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.magic.dao.EmployeesDAO;
+import com.magic.dto.EmployeesVO;
+
+@WebServlet("/custom.do")
+public class CustomServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		RequestDispatcher dis = request.getRequestDispatcher("customJoin.jsp");
+		dis.forward(request, response);
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		request.setCharacterEncoding("utf-8");
+		
+		EmployeesVO vo = new EmployeesVO();
+		
+		vo.setId(request.getParameter("id"));
+		vo.setPass(request.getParameter("pwd"));
+		vo.setName(request.getParameter("name"));
+		vo.setLev(request.getParameter("lev"));
+		vo.setGender(request.getParameter("gender"));
+		vo.setPhone(request.getParameter("phone"));
+		
+		EmployeesDAO empDAO = EmployeesDAO.getInstance();
+		int result = empDAO.insertMember(vo);
+		
+		if(result == 1) {
+			request.setAttribute("member", vo);
+			request.setAttribute("message", "회원 등록에 성공했습니다.");
+			String url = "joinSuccess.jsp";
+			RequestDispatcher dis = request.getRequestDispatcher(url);
+			dis.forward(request, response);
+		}
+	}
+
+}
 ---------------------------------------------------------------------------------------------
-★
+★customJoin.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="header.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<form method="post"> <%--  action="custom.do" 이 없어도 custom.do로 감 --%>
+	<br><br>
+		<table align="center" width="550">
+		
+			<tr>
+				<td colspan="2">사원등록</td>
+			</tr>
+			
+			<tr>
+				<td>아이디</td>
+				<td><input type="text" name="id"></td>
+			</tr>
+			
+			<tr>
+				<td>비밀번호</td>
+				<td><input type="password" name="pwd"></td>
+			</tr>
+			
+			<tr>
+				<td>이름</td>
+				<td><input type="text" name="name"></td>
+			</tr>
+			
+			<tr>
+				<td>권한</td>
+				<td>
+				<select name="lev">
+					<option value="A">운영자</option>
+					<option value="B">일반회원</option>
+				</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>성별</td>
+				<td>
+				<select name="gender">
+					<option value="1">남자</option>
+					<option value="2">여자</option>
+				</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>전화번호</td>
+				<td><input type="text" name="phone"></td>
+			</tr>
+			
+			<tr>
+				<td colspan="2">
+					<input type="submit" value="등록"> &nbsp;
+					<input type="reset" value="취소"> &nbsp;
+					<input type="button" value="메인 페이지로 이동" onclick="location.href='main.jsp'">
+				</td>
+			</tr>
+		</table>
+	</form>
+
+</body>
+</html>
 ---------------------------------------------------------------------------------------------
 ★
