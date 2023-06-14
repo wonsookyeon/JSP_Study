@@ -12,7 +12,7 @@ public class ProductVO {
 	private int code;
 	private String name;
 	private int price;
-	private String pictureurl;
+	private String pictureUrl;
 	private String description;
 
 }

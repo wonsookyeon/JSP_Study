@@ -66,7 +66,5 @@ public class UploadServlet extends HttpServlet {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
-
 }

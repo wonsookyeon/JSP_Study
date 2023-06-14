@@ -16,7 +16,7 @@
       <table class="list">
          <tr>
             <td colspan="5" style="border;white; text-align:right">
-               <a href="productWrite.do">상품 등록</a>            
+               <a href="productWrite.do">상품 등록</a>
             </td>
          </tr>
          
