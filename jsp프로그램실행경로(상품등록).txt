@@ -5,3 +5,14 @@
  * 5. DAO 클래스에 insert 메소드 호출하면서 vo 전달
  * 6. insert 메소드 내에서 db랑 연결해서 vo값 저장
  * 7. 저장 여부를 insert메소드에 전달
+
+-----------------------------------------------------------------------------------
+
+11장 MVC(모델2) 를 이용한 게시판
+
+1. 브라우저에서 list 요청   /BoardServlet?command=board_list
+2. DispatcherServlet 이동 - getParameter로 받아서 - 핸들러어댑터에 command(board_list) 보냄
+3. 핸들러어댑터에서 객체 생성, DispatcherServlet으로 리턴
+4. DispatcherServlet에서 if문 실행
+5. RequestDispatcher 로 url(jsp파일) 실행
+6. 화면에 보여줌
