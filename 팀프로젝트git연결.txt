@@ -1,0 +1,71 @@
+1. 일단 앞으로 프로젝트 작업하실 폴더하나 만들어주세요.
+
+2. git bash 켜주세요
+
+3. 해당폴더에 찾아가주세요.
+
+pwd -> 내가 현재 작업하고 있는 폴더를 나타내주는 명령어.
+
+4. 명령어 : git init   -> 현재 폴더를 로컬저장소로 지정하겠다는 뜻. 즉, remote(깃헙)에 연결하기 위한 폴더에요.
+   -> 현재 폴더가 git 저장소인지 확인하는 방법 : ls -al      <--- 이 명령어를 치면  .git 이라는 이름이 보이면 이 폴더는 현재 깃 저장소입니다.
+
+5. 이제 원격저장소랑 연결을 시켜야합니다.
+
+git config user.name "사용자 이름"  // ex: git config user.name "김기은"
+git config user.email 메일주소     // ex : git config kke9927@gmail.com
+
+
+> git config user.name "서연주" 
+> git config user.email kke9927@gmail.com   //본인 이메일주소 넣어주세요.
+
+6. 원격저장소를 연결할 차례입니다.
+
+>git remote add origin https://github.com/Alldayscoding/EZenTeamProject.git
+
+엔터치고 아무것도 안떠도 되요
+궁금하잖아요 remote랑 잘 접속이 됬는지? 
+
+확인하는 커맨드는 : git remote -v
+---------------------------------------------------------------------------
+아무 pc에서 연결할때 쓰는 방법
+
+7. 제가 올린 파일을 다운받을겁니다.
+
+ -> git clone https://github.com/Alldayscoding/EZenTeamProject.git
+
+
+8. sts로 열여보죠
+9. 오류뜨는건 제가 나중에 살펴볼게요
+10. 시나리오1) 예를들어 연주님이 product페이지를 업데이트 했다고 쳐요.
+
+지금 저장소에 올라가있는 파일이 저희가 보고 있는거.
+
+9. git status    -> untracked file     // tracked file        *untracked file = 깃에 한번도 올라가지 않은 파일... 예를들면 새로만들 파일..
+                                                                       *trakced file 깃에 올라가서 버전관리가 되고있는 파일...
+
+
+------------------------여기서 중요-------(깃에 올리는 스텝)------------------------
+
+파일 생성(수정)  -> git add -> git commit -> git push 보통 이 세 스텝입니다.
+
+
+  - git add 
+  - git add .      <-수정된 파일 전부올리는 커맨드에요.    
+
+ - git commit -m "first commit"      // -m 메세지 뜻 커밋할때 쓰는 메세지. 메세지도 쓰는 요령이 있는데 그거 나중에 공유드릴게요.
+
+ - 오류나면 : git push -u origin +master  
+ - 보통은 : git push 
+
+끝
+
+
+가지고 계신 폴더에서 본인 jsp파일이 있잖아요
+대충 수정하시고 push 한번씩 해보시죠.
+
+
+>git pull origin master
+
+Product.jsp 페이지 한번 봐보실래요? 업데이트 잘 되있는지?
+
+> add 랑 커밋 한번에 하는 명령어가 : git commit -am "hello"   /tracked 파일만 가능
