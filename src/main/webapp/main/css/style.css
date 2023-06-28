@@ -1,0 +1,117 @@
+@charset "UTF-8";
+
+html {
+    width: 100%;
+    min-height: 100%;
+}
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+ul,
+ol {
+    list-style-type: none;
+}
+a {
+    text-decoration: none;
+}
+span {
+	color: black;
+}
+img {
+    width: 100%;
+}
+.tit_wrap h1 {
+    font-size: 32px;
+}
+.section {
+    width: 100%;
+    margin: 5rem 0;
+}
+.inner {
+    margin: auto;
+    width: 1140px;
+    position: relative;
+}
+#section03 .inner {
+    padding: 40px 0;
+    width: 1080px;
+}
+#section03 .tit_wrap {
+    display: block;
+    font-size: 32px;
+    color: #333;
+    padding-bottom: 40px;
+}
+#section03 .inner .cont_wrap {
+    display: flex;
+    justify-content: space-between;
+}
+#section03 .inner .left_depth,
+#section03 .inner .right_depth
+ {
+    display: inline-block;
+}
+
+#section03 .inner .left_depth .list_wrap .content01,
+#section03 .inner .left_depth .list_wrap .content02,
+#section03 .inner .right_depth .list_wrap .content01,
+#section03 .inner .right_depth .list_wrap .content02
+ {
+    display: flex;
+    align-items: center;
+}
+#section03 .inner .img_box {
+    width: 110px;
+}
+#section03 .inner .right_depth {
+    margin-left: 20px;
+}
+/* #section04 {
+    box-sizing: border-box;
+    height: 625px;
+    background-image: url(/design/skinfood/skinfood/images/dev/sub-slider-bg1.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+} */
+#section04 .inner .tit_wrap {
+    text-align: center;
+    margin-bottom: 50px;
+}
+#section04 .inner .tit_wrap h1 {
+    font-size: 32px;
+}
+#section04 .inner .card_wrap {
+    display: flex;
+    margin: auto;
+}
+/* #section04 .inner .card_wrap .card_img {
+    width: 300px;
+} */
+#section05 .category_menu {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px auto;
+}
+#section05 .category_menu li {
+    width: 100px;
+}
+#section05 .category_menu .item_inner {
+    border: none;
+    background-color: inherit;
+    padding: 0;
+}
+#section05 .category_menu .item_icon {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    width: 68px;
+    height: 68px;
+}
+#section05 .category_box {
+    display: flex;
+}
+#section06 .tit_wrap {
+    padding-bottom: 35px;
+}

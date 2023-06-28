@@ -1,0 +1,88 @@
+@charset "UTF-8";
+
+* { margin: 0; padding: 0;}
+/*
+div {
+    align-items: center;
+}
+.header{ 
+    width: 1140px; height: 38px;
+    background-color:
+}
+
+.header ul{
+    float: right;
+    list-style: none;
+}
+.header ul li{display: inline-block;}
+div.menu{
+    width: 1140px; height: 100px;
+    background-color: 
+}
+.menu ul{
+    float: right;
+    list-style: none;
+}
+.menu ul li{display: inline-block;}
+*/
+
+#top{margin-top: 70px; border-top: 1px solid #e9e9e9}
+
+#event_layout{ height:1600px;  margin : 0 auto; }
+#event_layout .category{width: 1140px;height: 30px; margin-left: 50px; }
+#event_layout .category li{display: inline-block; float: left; color: rgb(161, 159, 159);
+    font-size: 12px;}
+#event_layout .category li a{text-decoration: none; color: rgb(161, 159, 159); font-size: 12px;}
+/*진행중 이벤트*/
+#event_layout .event_title{ width:1140px; height:130px; line-height: 130px;}
+#event_layout .event_title h3{font-size: 32px; text-align: center; font-weight: bold;}
+
+/*이벤트 상자*/
+.event_content {width:1200px; height:1250px;  margin-top: 40px; }
+.event_content #event {  display:inline-block; border: 1px solid #a8a6a6;
+    width: 368px;
+    height: 380px;
+    margin-left: 18px; margin-bottom: 18px; cursor: pointer;}
+
+.event_content .item_img {
+    display: block;
+    width: 100%;
+    height: 225px;
+    overflow: hidden;
+}
+.event_content .item_img img{width: 100%; height: 100%;}
+.event_content .item_info{
+    padding: 24px 20px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+.event_content .item_info_title{height: 50px; font-size: 18px; font-weight: bold;}
+.event_content .item_info div{height: 50px; line-height: 50px; font-size: 16px; color: gray;}
+
+.event_content .item_info span{
+    display: inline-block;
+    padding: 7px 15px 8px;
+    line-height: 1;
+    background: #f6f6f6;
+    color: #222;
+    text-align: center;}
+
+.event_paging{width:1140px; height: 45px; line-height: 60px;}
+.event_paging a{height: 45px; font-size: 15px; border-bottom: 1px solid #333;
+    color: #000 ;
+    font-weight: bold; display: inline-block; min-width: 25px;}
+.event_paging a:hover{ border: none;}
+
+/*
+.event_paging a {
+    margin: 0 1px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: normal;
+    color: #605f60;
+}*/
+
+
+.footer{height:200px; background-color: pink;}
+
