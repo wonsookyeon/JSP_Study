@@ -1,0 +1,107 @@
+/*header CSS*/
+@charset "UTF-8";
+
+
+header {
+/*	padding: 10px;*/
+	background-color: rgb(231, 230, 230);
+}
+
+.top {
+	text-align: right;
+}
+
+.top a {
+	color: gray;
+	font-size: 15px;
+	padding: 10px;
+}
+.logo {
+	width: 150px;
+	height: 100px;
+	float: left;
+	margin: 40px 0 0 300px;
+}
+img{
+	
+	width:100%;
+}
+
+#basket_img {
+	width: 30px;
+	height: 30px;
+	
+}
+#search_img {
+	width: 30px;
+	height: 30px;
+	
+}
+.icon {
+	float: right;
+	margin: -35px 240px 0 0;
+}
+
+li {
+	list-style: none;
+}
+.menu li a {
+	font-size: 20px;
+}
+a {
+	text-decoration: none;
+	font-size: 20px;
+}
+
+.menu {
+	width: 68%;
+	overflow: hidden;
+	display: flex;
+	margin-top:43px;
+	
+}
+
+.menu>li {
+	/*
+	width: 20%; 20*5=100%
+	text-align: center;
+	line-height: 40px;
+	/* background-color: #5778ff;
+	margin: 40px 0px 0px 170px;*/
+	margin:0 auto;
+}
+
+.menu a {
+	color: black;
+	
+}
+
+.submenu>li {
+	line-height: 27px;
+/*	display: flex;*/
+	text-align: center;
+}
+.submenu li a {
+	font-size: 12px;
+}
+
+.submenu {
+	height: 0; /*ul의 높이를 안보이게 처리*/
+	overflow: hidden;
+}
+
+.menu>li:hover {
+	/*   background-color: #052dca;*/
+	transition-duration: 0.5s;
+}
+
+.menu>li:hover .submenu {
+	height: 250px; /*서브메뉴 li한개의 높이 50*5*/
+	transition-duration: 1s;
+}
+
+.img_icon{
+
+    margin-right: 0px;
+    margin-left: 0px;
+}
